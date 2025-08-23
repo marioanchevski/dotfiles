@@ -17,6 +17,9 @@ return {
           '${3rd}/luv/library',
         },
       },
+      completion = {
+        callSnippet = 'Replace',
+      },
     },
-  }
+  },
 }

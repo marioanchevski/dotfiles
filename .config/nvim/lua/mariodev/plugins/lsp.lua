@@ -32,7 +32,7 @@ return {
             vim.keymap.set(mode, keys, func, { buffer = event.buf })
           end
 
-          map('n', 'gr', vim.lsp.buf.rename)
+          map('n', 'grr', vim.lsp.buf.rename)
           map('n', '<leader>gd', vim.lsp.buf.declaration)
           map('n', '<leader>ca', vim.lsp.buf.code_action)
           map('n', '<leader>gr', require('telescope.builtin').lsp_references)
@@ -43,6 +43,9 @@ return {
         end,
       })
 
+      vim.lsp.config('*', {
+        capabilities = require('blink.cmp').get_lsp_capabilities(nil, true),
+      })
       vim.lsp.enable { 'lua_ls', 'gopls' }
     end,
   },
