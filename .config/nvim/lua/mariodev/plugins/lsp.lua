@@ -12,13 +12,18 @@ return {
       },
       {
         'WhoIsSethDaniel/mason-tool-installer.nvim',
-        opts = { ensure_installed = { 'stylua' } },
+        opts = {
+          ensure_installed = {
+            'stylua',
+            'gopls',
+            'pyright',
+          },
+        },
       },
     },
     opts = {
       ensure_installed = {
         'lua_ls',
-        'gopls',
       },
       automatic_enable = false,
     },
@@ -46,7 +51,12 @@ return {
       vim.lsp.config('*', {
         capabilities = require('blink.cmp').get_lsp_capabilities(nil, true),
       })
-      vim.lsp.enable { 'lua_ls', 'gopls' }
+
+      vim.lsp.enable {
+        'lua_ls',
+        'gopls',
+        'pyright',
+      }
     end,
   },
 }
