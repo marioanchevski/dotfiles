@@ -15,8 +15,8 @@ return {
         opts = {
           ensure_installed = {
             'stylua',
-            'gopls',
-            'pyright',
+            'prettier',
+            'prettierd',
           },
         },
       },
@@ -24,6 +24,8 @@ return {
     opts = {
       ensure_installed = {
         'lua_ls',
+        'gopls',
+        'pyright',
       },
       automatic_enable = false,
     },
