@@ -39,6 +39,8 @@ bindkey '^N' down-line-or-beginning-search
 bindkey '^[[A' up-line-or-beginning-search
 bindkey '^[[B' down-line-or-beginning-search
 
+bindkey -s '' 'tmux-sessionizer\n'
+
 
 alias l='ls -lah'
 alias ls='ls --color=auto'

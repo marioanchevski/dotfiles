@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+selected=$(
+  find \
+    ~/.config \
+    ~/personal/projects \
+    ~/work/projects \
+    -mindepth 1 -maxdepth 1 -type d | fzf
+)
+
+if [[ -z "$selected" ]]; then
+  exit 0
+fi
+
+selected_name=$(basename "$selected" | tr ":., " "____")
+
+
+switch_to() {
+  if [[ -z $TMUX ]]; then
+    tmux attach-session -t $1
+  else
+    tmux switch-client -t $1
+  fi
+}
+
+if tmux has-session -t=$selected_name 2> /dev/null; then # if doesnt exist outputs message so we redirect that
+  switch_to $selected_name
+  exit 0
+fi
+
+tmux new-session -ds $selected_name -c $selected
+switch_to $selected_name
+# tmux send-keys -t $selected_name "ready-tmux" 
