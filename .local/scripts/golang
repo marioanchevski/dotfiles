@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+set -o pipefail
+
+default_go_ver='go1.27.1' # latest at the time of creating the script
+godev='https://go.dev/dl/'
+
+log() {
+  printf '[DEBUG] %s\n' "$*"
+}
+
+cleanup() {
+  log "Removing downloaded tar: $tarloc"
+  rm -rf -- "$temp_dir"
+}
+
+# example
+# GO_VERSION='go1.27.1'
+#
+if [[ -z $GO_VERSION ]]; then
+  log "GO_VERSION not provided, fetching latest version from $godev"
+   GO_VERSION=$(
+     curl -sSLf "${godev}?mode=json" |
+       jq -er '.[0].version'
+     ) || {
+       log "Failed to fetch latest go.dev version. Defaulting to $default_go_ver"
+       GO_VERSION=$default_go_ver
+     }
+fi
+
+if command -v go >/dev/null; then 
+  installed=$(go version | awk '{print $3}')
+  [[ $GO_VERSION == $installed ]] && {
+    log "Up to date with latest version"
+    exit 0 
+  }
+fi
+
+# if provided validate
+# for now no validation, used only by me
+
+tarname="${GO_VERSION:-$default_go_ver}.linux-amd64.tar.gz"
+if ! temp_dir=$(mktemp -d); then
+  log "Failed to create temporary directory for storing the archive"
+  exit 1
+fi
+
+tarloc="$temp_dir/$tarname"
+trap cleanup EXIT
+
+log "Trying to download $tarname"
+if curl -LsSf -o "$tarloc" "$godev$tarname"; then
+  log "Tar downloaded: $tarloc"
+else
+  log "Failed to download from $godev"
+  exit 1
+fi
+
+log "Removing old go verson"
+sudo rm -rf "/usr/local/go"
+
+log "Extracting tar $tarloc"
+sudo tar -C "/usr/local" -xzf "$tarloc" # idea extract to tmp dir before deleting /usr/local/go
