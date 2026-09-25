@@ -7,6 +7,7 @@ export EDITOR=nvim
 export VISUAL=$EDITOR
 
 export PERSONAL="$HOME/personal"
+export SCRIPTS="$HOME/.local/scripts"
 
-export PATH="$PATH:/.local/bin"
-export PATH="$PATH:/.local/scripts"
+export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:$HOME/.local/scripts"
