@@ -14,22 +14,22 @@ cleanup() {
 }
 
 # example
-# GO_VERSION='go1.27.1'
+# GOVERSION='go1.27.1'
 #
-if [[ -z $GO_VERSION ]]; then
-  log "GO_VERSION not provided, fetching latest version from $godev"
-   GO_VERSION=$(
+if [[ -z $GOVERSION ]]; then
+  log "GOVERSION not provided, fetching latest version from $godev"
+   GOVERSION=$(
      curl -sSLf "${godev}?mode=json" |
        jq -er '.[0].version'
      ) || {
        log "Failed to fetch latest go.dev version. Defaulting to $default_go_ver"
-       GO_VERSION=$default_go_ver
+       GOVERSION=$default_go_ver
      }
 fi
 
 if command -v go >/dev/null; then 
-  installed=$(go version | awk '{print $3}')
-  [[ $GO_VERSION == $installed ]] && {
+  installed=$(go env GOVERSION)
+  [[ $GOVERSION == $installed ]] && {
     log "Up to date with latest version"
     exit 0 
   }
@@ -38,7 +38,7 @@ fi
 # if provided validate
 # for now no validation, used only by me
 
-tarname="${GO_VERSION:-$default_go_ver}.linux-amd64.tar.gz"
+tarname="${GOVERSION:-$default_go_ver}.linux-amd64.tar.gz"
 if ! temp_dir=$(mktemp -d); then
   log "Failed to create temporary directory for storing the archive"
   exit 1
