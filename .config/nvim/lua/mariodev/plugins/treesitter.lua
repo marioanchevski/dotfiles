@@ -12,7 +12,6 @@ return {
       'css',
       'jsdoc',
       'json',
-      'jsonc',
       'javascript',
       'typescript',
       'vim',
