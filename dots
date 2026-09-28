@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-script_dir=$(cd $(dirname $BASH_SOURCE[0]) && pwd)
+link=""
+script_dir="$(cd $(dirname $BASH_SOURCE[0]) && pwd)"
 
 XDG_CONFIG_HOME="$HOME/.config"
 SCRIPTS="$HOME/.local/scripts"
@@ -22,8 +23,13 @@ cpdirs() {
    log "[executing] rm -rf $to/$dir"
    rm -rf "$to/$dir"
 
-   log "[executing] cp -r $script_dir/$from/$dir $to/$dir"
-   cp -r "$script_dir/$from/$dir" "$to/$dir"
+    if [[ ! -z $link ]]; then
+      log "[executing] ln -s $script_dir/$from/$dir $to/$dir"
+      ln -s "$script_dir/$from/$dir" "$to/$dir"
+    else
+      log "[executing] cp -r $script_dir/$from/$dir $to/$dir"
+      cp -r "$script_dir/$from/$dir" "$to/$dir"
+    fi
  done
 
  popd >/dev/null
@@ -42,12 +48,25 @@ cpfiles(){
    log "[executing] rm $to/$filename"
    rm "$to/$filename" 2>/dev/null
 
-   log "[executing] cp $script_dir/$from/$filename $to/$filename"
-   cp "$script_dir/$from/$filename" "$to/$filename"
+    if [[ ! -z $link ]]; then
+      log "[executing] ln -s $script_dir/$from/$filename $to/$filename"
+      ln -s "$script_dir/$from/$filename" "$to/$filename"
+    else
+      log "[executing] cp $script_dir/$from/$filename $to/$filename"
+      cp "$script_dir/$from/$filename" "$to/$filename"
+    fi
  done
 
  popd >/dev/null
 }
+
+
+while [ $# -gt 0 ]; do
+  if [ $1 == "--link" ]; then
+    link=$1 
+  fi
+  shift
+done
 
 cpdirs ".config" "$XDG_CONFIG_HOME"
 cpfiles ".local/scripts" "$SCRIPTS"
