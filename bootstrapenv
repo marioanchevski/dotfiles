@@ -1,0 +1,39 @@
+#! /usr/bin/env bash
+# the idea is to run this on new fresh arch-derived system
+RED='\033[31m'
+GREEN='\033[32m'
+RESET='\033[0m'
+
+# create the dir structure
+mkdir -p "$HOME/.config"
+mkdir -p "$HOME/.cache/zsh" "$HOME/.local/state/zsh"
+mkdir -p "$HOME/.local/scripts" "$HOME/.local/bin"
+mkdir -p "$HOME/personal/projects" "$HOME/work/projects"
+
+# install esential software and tools i use daily
+sudo pacman -Suy --needed --noconfirm \
+  jq \
+  git \
+  zsh \
+  npm \
+  fzf \
+  tmux \
+  tree \
+  unzip \
+  ripgrep
+
+installers=$(find installer -mindepth 1 -maxdepth 1 -executable)
+for installer in $installers; do 
+  echo "[------------------------$installer------------------------]"
+  if "./$installer"; then 
+    printf "${GREEN}[SUCCESS]%s$RESET\n" "$installer"
+  else
+    printf "${RED}[ERROR]%s$RESET\n" "$installer"
+ fi
+
+done
+
+sudo chsh -s "/usr/bin/zsh"
+echo "export ZDOTDIR=$HOME/.config/zsh" > "$HOME/.zshenv"
+
+./dots

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e
+
+sudo pacman -S --needed --noconfirm base-devel cmake ninja curl git
+
+git clone https://github.com/neovim/neovim.git "$HOME/personal/projects/neovim" && \
+  cd "$HOME/personal/projects/neovim"
+
+make CMAKE_BUILD_TYPE=Release
+sudo make install
