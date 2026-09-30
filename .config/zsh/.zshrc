@@ -13,6 +13,9 @@ setopt EXTENDED_HISTORY
 source <(fzf --zsh)
 export FZF_DEFAULT_OPTS='--height 44% --layout=reverse --border'
 
+export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
+eval "$(starship init zsh)"
+
 
 setopt NO_FLOW_CONTROL
 setopt NUMERIC_GLOB_SORT
